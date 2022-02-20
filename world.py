@@ -1,11 +1,13 @@
+# TODO: refactor code to make it readable (e.g., set consts)
 import numpy as np
-from agent import RandomAgent
+from agents.random_agent import RandomAgent
 from copy import deepcopy
 
 
 class World:
     def __init__(self):
         # Two players
+        # TODO: load agents from agent files
         self.p0 = RandomAgent()
         self.p1 = RandomAgent()
         
@@ -48,6 +50,7 @@ class World:
             adv_pos = self.p0_pos
         
         try:
+            # TODO: Check Timeout
             next_pos, dir = cur_player.step(
                 deepcopy(self.chess_board),
                 tuple(cur_pos),
@@ -64,19 +67,23 @@ class World:
         except ValueError as e:
             print(e)
             pass  # TODO: Random walk
+        # Print out each step
         print(self.turn, next_pos, dir)
         if not self.turn:
             self.p0_pos = next_pos
         else:
             self.p1_pos = next_pos
+        # Set the barrier to True
         r, c = next_pos
         self.chess_board[r, c, dir] = True
         # Set the opposite barrier to True
         move = self.moves[dir]
         self.chess_board[r + move[0], c + move[1], abs(dir - 2)] = True
+        # Change turn
         self.turn = 1 - self.turn
         
         return self.check_endgame()
+        # TODO: Print out Chessboard for visualization
     
     def check_valid_step(self, start_pos, end_pos, barrier_dir):
         # Endpoint already has barrier or is boarder

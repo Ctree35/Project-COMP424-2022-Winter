@@ -1,9 +1,11 @@
 import numpy as np
 from copy import deepcopy
+from agent import Agent
 
 
-class RandomAgent:
+class RandomAgent(Agent):
     def __init__(self):
+        super(RandomAgent, self).__init__()
         self.name = "RandomAgent"
     
     def step(self, chess_board, my_pos, adv_pos, max_step):
@@ -33,14 +35,10 @@ class RandomAgent:
                 break
                 
         # Put Barrier
-        # dir = np.random.randint(0, 4)
+        dir = np.random.randint(0, 4)
         r, c = my_pos
-        # while chess_board[r, c, dir]:
-        #     dir = np.random.randint(0, 4)
-        for dir in range(4):
-            if chess_board[r, c, dir]:
-                continue
-            return my_pos, dir
+        while chess_board[r, c, dir]:
+            dir = np.random.randint(0, 4)
         
-        # return my_pos, dir
+        return my_pos, dir
         
