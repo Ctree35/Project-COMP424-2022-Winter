@@ -1,6 +1,6 @@
 import numpy as np
 from copy import deepcopy
-from agent import Agent
+from agents.agent import Agent
 
 
 class RandomAgent(Agent):

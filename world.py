@@ -2,6 +2,7 @@
 import numpy as np
 from agents.random_agent import RandomAgent
 from copy import deepcopy
+import traceback
 
 
 class World:
@@ -63,12 +64,13 @@ class World:
             if not 0 <= dir <= 3:
                 raise ValueError("Barrier dir should reside in [0, 3], but your dir is {}".format(dir))
             if not self.check_valid_step(cur_pos, next_pos, dir):
-                raise ValueError("End position {} cannot be reached from {}".format(next_pos, cur_pos))
-        except TypeError or ValueError as e:
-            print(e)
+                raise ValueError("Not a valid step from {} to {} and put barrier at {}".format(next_pos, cur_pos, dir))
+        except:
+            print("An exception raised. The traceback is as follows:\n{}".format(traceback.format_exc()))
             print("Execute Random Walk!")
             next_pos, dir = self.random_walk(tuple(cur_pos), tuple(adv_pos))
-            
+            next_pos = np.asarray(next_pos, dtype=cur_pos.dtype)
+
         # Print out each step
         print(self.turn, next_pos, dir)
         if not self.turn:
