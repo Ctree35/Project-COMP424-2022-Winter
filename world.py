@@ -64,9 +64,11 @@ class World:
                 raise ValueError("Barrier dir should reside in [0, 3], but your dir is {}".format(dir))
             if not self.check_valid_step(cur_pos, next_pos, dir):
                 raise ValueError("End position {} cannot be reached from {}".format(next_pos, cur_pos))
-        except ValueError as e:
+        except TypeError or ValueError as e:
             print(e)
-            pass  # TODO: Random walk
+            print("Execute Random Walk!")
+            next_pos, dir = self.random_walk(tuple(cur_pos), tuple(adv_pos))
+            
         # Print out each step
         print(self.turn, next_pos, dir)
         if not self.turn:
@@ -159,7 +161,39 @@ class World:
         r, c = pos
         return 0 <= r < self.board_size and 0 <= c < self.board_size
 
+    def random_walk(self, my_pos, adv_pos):
+        ori_pos = deepcopy(my_pos)
+        steps = np.random.randint(0, self.max_step + 1)
+        # Random Walk
+        for _ in range(steps):
+            r, c = my_pos
+            dir = np.random.randint(0, 4)
+            m_r, m_c = self.moves[dir]
+            my_pos = (r + m_r, c + m_c)
+    
+            # Special Case enclosed by Adversary
+            k = 0
+            while self.chess_board[r, c, dir] or my_pos == adv_pos:
+                k += 1
+                if k > 10:
+                    break
+                dir = np.random.randint(0, 4)
+                m_r, m_c = self.moves[dir]
+                my_pos = (r + m_r, c + m_c)
+    
+            if k > 10:
+                my_pos = ori_pos
+                break
 
+        # Put Barrier
+        dir = np.random.randint(0, 4)
+        r, c = my_pos
+        while self.chess_board[r, c, dir]:
+            dir = np.random.randint(0, 4)
+
+        return my_pos, dir
+    
+    
 if __name__ == "__main__":
     world = World()
     is_end, p0_score, p1_score = world.step()

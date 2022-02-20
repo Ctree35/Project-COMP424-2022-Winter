@@ -21,6 +21,7 @@ class RandomAgent(Agent):
             m_r, m_c = moves[dir]
             my_pos = (r + m_r, c + m_c)
             
+            # Special Case enclosed by Adversary
             k = 0
             while chess_board[r, c, dir] or my_pos == adv_pos:
                 k += 1
