@@ -25,13 +25,13 @@ class RandomAgent(Agent):
             k = 0
             while chess_board[r, c, dir] or my_pos == adv_pos:
                 k += 1
-                if k > 10:
+                if k > 300:
                     break
                 dir = np.random.randint(0, 4)
                 m_r, m_c = moves[dir]
                 my_pos = (r + m_r, c + m_c)
             
-            if k > 10:
+            if k > 300:
                 my_pos = ori_pos
                 break
                 

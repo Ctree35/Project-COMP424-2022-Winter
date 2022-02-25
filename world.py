@@ -97,8 +97,14 @@ class World:
         r, c = next_pos
         self.chess_board[r, c, dir] = True
         # Set the opposite barrier to True
+        opposites = {
+            0: 2,
+            1: 3,
+            2: 0,
+            3: 1
+        }
         move = self.moves[dir]
-        self.chess_board[r + move[0], c + move[1], abs(dir - 2)] = True
+        self.chess_board[r + move[0], c + move[1], opposites[dir]] = True
         # Change turn
         self.turn = 1 - self.turn
 
@@ -197,13 +203,13 @@ class World:
             k = 0
             while self.chess_board[r, c, dir] or my_pos == adv_pos:
                 k += 1
-                if k > 10:
+                if k > 300:
                     break
                 dir = np.random.randint(0, 4)
                 m_r, m_c = self.moves[dir]
                 my_pos = (r + m_r, c + m_c)
 
-            if k > 10:
+            if k > 300:
                 my_pos = ori_pos
                 break
 

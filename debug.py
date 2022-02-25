@@ -10,4 +10,5 @@ while not is_end:
     sleep(2)
     is_end, p0_score, p1_score = test_world.step()
     test_world.render()
+sleep(10)
 print(p0_score, p1_score)
