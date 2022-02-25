@@ -149,10 +149,12 @@ class World:
                     pos_b = find((r + move[0], c + move[1]))
                     if pos_a != pos_b:
                         union(pos_a, pos_b)
-        
+                        
+        for r in range(self.board_size):
+            for c in range(self.board_size):
+                find((r, c))
         p0_r = find(tuple(self.p0_pos))
         p1_r = find(tuple(self.p1_pos))
-
         if p0_r == p1_r:
             return False, 0, 0
         p0_score = list(father.values()).count(p0_r)
