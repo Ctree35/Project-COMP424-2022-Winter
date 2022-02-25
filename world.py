@@ -4,6 +4,11 @@ from agents.random_agent import RandomAgent
 from copy import deepcopy
 import traceback
 from ui import UIEngine
+import logging
+
+logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 
 class World:
@@ -12,6 +17,8 @@ class World:
         # TODO: load agents from agent files
         self.p0 = RandomAgent()
         self.p1 = RandomAgent()
+        self.player_names = {0: "A", 1: "B"}
+        self.dir_names = {0: "Up", 1: "Right", 2: "Down", 3: "Left"}
 
         # Moves (Up, Right, Down, Left)
         self.moves = ((-1, 0), (0, 1), (1, 0), (0, -1))
@@ -88,7 +95,10 @@ class World:
             next_pos = np.asarray(next_pos, dtype=cur_pos.dtype)
 
         # Print out each step
-        print(self.turn, next_pos, dir)
+        # print(self.turn, next_pos, dir)
+        logger.info(
+            f"Player {self.player_names[self.turn]} moves to {next_pos} facing {self.dir_names[dir]}"
+        )
         if not self.turn:
             self.p0_pos = next_pos
         else:
@@ -97,12 +107,7 @@ class World:
         r, c = next_pos
         self.chess_board[r, c, dir] = True
         # Set the opposite barrier to True
-        opposites = {
-            0: 2,
-            1: 3,
-            2: 0,
-            3: 1
-        }
+        opposites = {0: 2, 1: 3, 2: 0, 3: 1}
         move = self.moves[dir]
         self.chess_board[r + move[0], c + move[1], opposites[dir]] = True
         # Change turn
@@ -183,6 +188,17 @@ class World:
             return False, 0, 0
         p0_score = list(father.values()).count(p0_r)
         p1_score = list(father.values()).count(p1_r)
+        player_win = None
+        win_blocks = -1
+        if p0_score > p1_score:
+            player_win = 0
+            win_blocks = p0_score
+        else:
+            player_win = 1
+            win_blocks = p1_score
+        logging.info(
+            f"Game ends! Player {self.player_names[player_win]} wins having control over {win_blocks} blocks!"
+        )
         return True, p0_score, p1_score
 
     def check_boundary(self, pos):
