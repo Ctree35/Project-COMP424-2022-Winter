@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 
 
 class UIEngine:
-    def __init__(self, grid_width=5) -> None:
+    def __init__(self, grid_width=5, world=None) -> None:
         self.grid_size = (grid_width, grid_width)
+        self.world = world
         plt.figure()
         # plt.axis([0, 0, 0, 10])
         plt.ion()
@@ -112,6 +113,49 @@ class UIEngine:
         # move x axis to top
         plt.tick_params(bottom=False, labelbottom=False, top=True, labeltop=True)
 
+    def plot_text_info(self):
+        turn = 1 - self.world.turn
+        agent_0 = f"A: {self.world.p0}"
+        agent_1 = f"B: {self.world.p1}"
+        plt.figtext(
+            0.2,
+            0.1,
+            agent_0,
+            wrap=True,
+            horizontalalignment="left",
+            fontweight="bold" if turn == 0 else "normal",
+        )
+        plt.figtext(
+            0.2,
+            0.05,
+            agent_1,
+            wrap=True,
+            horizontalalignment="left",
+            fontweight="bold" if turn == 1 else "normal",
+        )
+
+        if len(self.world.results_cache) > 0:
+            plt.figtext(
+                0.5,
+                0.1,
+                f"Scores: A: [{self.world.results_cache[1]}], B: [{self.world.results_cache[2]}]",
+                horizontalalignment="left",
+            )
+            if self.world.results_cache[0]:
+                win_player = (
+                    "A"
+                    if self.world.results_cache[1] > self.world.results_cache[2]
+                    else "B"
+                )
+                plt.figtext(
+                    0.5,
+                    0.05,
+                    f"Player {win_player} wins!",
+                    horizontalalignment="left",
+                    fontweight="bold",
+                    color="green",
+                )
+
     def render(self, chess_board, p1_pos, p2_pos, debug=False):
         """
         Render the board along with player positions
@@ -127,6 +171,8 @@ class UIEngine:
         self.plot_grid_with_board(chess_board, p1_pos, p2_pos, debug=debug)
         self.plot_game_boundary()
         self.fix_axis()
+        self.plot_text_info()
+        plt.subplots_adjust(bottom=0.2)
         plt.pause(0.1)
 
 

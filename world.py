@@ -101,6 +101,8 @@ class World:
         # Maximum Steps
         self.max_step = (self.board_size + 1) // 2
 
+        # Cache to store and use the data
+        self.results_cache = ()
         # UI Engine
         self.display_ui = display_ui
         self.display_delay = display_delay
@@ -109,7 +111,7 @@ class World:
             logger.info(
                 f"Initializing the UI Engine, with display_delay={display_delay} seconds"
             )
-            self.ui_engine = UIEngine(self.board_size)
+            self.ui_engine = UIEngine(self.board_size, self)
             self.render()
 
     def step(self):
@@ -174,10 +176,17 @@ class World:
         # Change turn
         self.turn = 1 - self.turn
 
+        results = self.check_endgame()
+        self.results_cache = results
+
         # Print out Chessboard for visualization
         if self.display_ui:
             self.render()
-        return self.check_endgame()
+            if results[0]:
+                # If game ends and displaying the ui, wait for user input
+                click.echo("Press a button to exit the game.")
+                _ = click.getchar()
+        return results
 
     def check_valid_step(self, start_pos, end_pos, barrier_dir):
         # Endpoint already has barrier or is boarder
@@ -247,10 +256,10 @@ class World:
                 find((r, c))
         p0_r = find(tuple(self.p0_pos))
         p1_r = find(tuple(self.p1_pos))
-        if p0_r == p1_r:
-            return False, 0, 0
         p0_score = list(father.values()).count(p0_r)
         p1_score = list(father.values()).count(p1_r)
+        if p0_r == p1_r:
+            return False, p0_score, p1_score
         player_win = None
         win_blocks = -1
         if p0_score > p1_score:
@@ -262,10 +271,6 @@ class World:
         logging.info(
             f"Game ends! Player {self.player_names[player_win]} wins having control over {win_blocks} blocks!"
         )
-        if self.display_ui:
-            # If displaying the ui, wait for user input
-            click.echo("Press a button to exit the game.")
-            _ = click.getchar()
         return True, p0_score, p1_score
 
     def check_boundary(self, pos):
