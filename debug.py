@@ -1,14 +1,8 @@
 from world import World
 from time import sleep
 
-test_world = World()
-test_world.render()
-sleep(2)
+test_world = World(display_ui=True, display_delay=0.4)
 is_end, p0_score, p1_score = test_world.step()
-test_world.render()
 while not is_end:
-    sleep(2)
     is_end, p0_score, p1_score = test_world.step()
-    test_world.render()
-sleep(10)
 print(p0_score, p1_score)

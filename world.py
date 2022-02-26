@@ -4,6 +4,8 @@ from agents.random_agent import RandomAgent
 from copy import deepcopy
 import traceback
 from ui import UIEngine
+from time import sleep
+import click
 import logging
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
@@ -12,8 +14,19 @@ logger = logging.getLogger(__name__)
 
 
 class World:
-    def __init__(self):
+    def __init__(self, display_ui=False, display_delay=2):
+        """
+        Initialize the game world
+
+        Parameters
+        ----------
+        display_ui : bool
+            Whether to display the game board
+        display_delay : float
+            Delay between each step
+        """
         # Two players
+        logger.info("Initialize the game world")
         # TODO: load agents from agent files
         self.p0 = RandomAgent()
         self.p1 = RandomAgent()
@@ -48,8 +61,16 @@ class World:
         # Maximum Steps
         self.max_step = (self.board_size + 1) // 2
 
-        # Initialize UI Engine
-        self.ui_engine = UIEngine(self.board_size)
+        # UI Engine
+        self.display_ui = display_ui
+        self.display_delay = display_delay
+        if display_ui:
+            # Initialize UI Engine
+            logger.info(
+                f"Initializing the UI Engine, with display_delay={display_delay} seconds"
+            )
+            self.ui_engine = UIEngine(self.board_size)
+            self.render()
 
     def step(self):
         if not self.turn:
@@ -113,8 +134,10 @@ class World:
         # Change turn
         self.turn = 1 - self.turn
 
+        # Print out Chessboard for visualization
+        if self.display_ui:
+            self.render()
         return self.check_endgame()
-        # TODO: Print out Chessboard for visualization
 
     def check_valid_step(self, start_pos, end_pos, barrier_dir):
         # Endpoint already has barrier or is boarder
@@ -199,6 +222,8 @@ class World:
         logging.info(
             f"Game ends! Player {self.player_names[player_win]} wins having control over {win_blocks} blocks!"
         )
+        click.echo("Press a button to exit the game.")
+        _ = click.getchar()
         return True, p0_score, p1_score
 
     def check_boundary(self, pos):
@@ -242,6 +267,7 @@ class World:
         Render the game board using the UI Engine
         """
         self.ui_engine.render(self.chess_board, self.p0_pos, self.p1_pos, debug=debug)
+        sleep(self.display_delay)
 
 
 if __name__ == "__main__":
