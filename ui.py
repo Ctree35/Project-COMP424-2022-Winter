@@ -112,6 +112,8 @@ class UIEngine:
         plt.yticks(ticks, labels)
         # move x axis to top
         plt.tick_params(bottom=False, labelbottom=False, top=True, labeltop=True)
+        plt.xlabel("Y Position")
+        plt.ylabel("X Position", position="top")
 
     def plot_text_info(self):
         turn = 1 - self.world.turn

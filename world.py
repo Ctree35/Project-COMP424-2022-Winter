@@ -143,8 +143,8 @@ class World:
                 )
             if not self.check_valid_step(cur_pos, next_pos, dir):
                 raise ValueError(
-                    "Not a valid step from {} to {} and put barrier at {}".format(
-                        next_pos, cur_pos, dir
+                    "Not a valid step from {} to {} and put barrier at {}, with max steps = {}".format(
+                        next_pos, cur_pos, dir, self.max_step
                     )
                 )
         except:
