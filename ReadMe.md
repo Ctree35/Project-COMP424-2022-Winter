@@ -1,5 +1,26 @@
 ### Don't be Enclosed! (or a better title)
 
+#### Simulate a game
+
+```bash
+python simulator.py -h       
+usage: simulator.py [-h] [--player_1 PLAYER_1] [--player_2 PLAYER_2]
+                    [--board_size BOARD_SIZE] [--display]
+                    [--display_delay DISPLAY_DELAY]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --player_1 PLAYER_1
+  --player_2 PLAYER_2
+  --board_size BOARD_SIZE
+  --display
+  --display_delay DISPLAY_DELAY
+```
+
+### Write your own agents
+
+We have provided an example agent implementation in `agents.RandomAgent`. After implementing your own in the agents directory, register your agent using the decorator `@register_agent`.
+
 #### Gameboard
 
 ![gameboard](Gameboard.png)
