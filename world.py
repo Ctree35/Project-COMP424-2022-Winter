@@ -13,12 +13,16 @@ logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
+AGENT_NOT_FOUND_MSG = (
+    "Check if you have used the decorator @register_agent to register your agent!"
+)
+
 
 class World:
     def __init__(
         self,
-        player_0="random_agent",
         player_1="random_agent",
+        player_2="random_agent",
         display_ui=False,
         display_delay=2,
     ):
@@ -27,6 +31,10 @@ class World:
 
         Parameters
         ----------
+        player_1: str
+            The registered class of the first player
+        player_2: str
+            The registered class of the second player
         display_ui : bool
             Whether to display the game board
         display_delay : float
@@ -35,16 +43,20 @@ class World:
         # Two players
         logger.info("Initialize the game world")
         # Load agents as defined in decorators
-        if player_0 not in AGENT_REGISTRY:
-            raise ValueError(f"Agent {player_0} is not registered")
         if player_1 not in AGENT_REGISTRY:
-            raise ValueError(f"Agent {player_1} is not registered")
+            raise ValueError(
+                f"Agent '{player_1}' is not registered. {AGENT_NOT_FOUND_MSG}"
+            )
+        if player_2 not in AGENT_REGISTRY:
+            raise ValueError(
+                f"Agent '{player_2}' is not registered. {AGENT_NOT_FOUND_MSG}"
+            )
 
-        p0_agent = AGENT_REGISTRY[player_0]
-        p1_agent = AGENT_REGISTRY[player_1]
-        logger.info(f"Registering p0 agent : {player_0}")
+        p0_agent = AGENT_REGISTRY[player_1]
+        p1_agent = AGENT_REGISTRY[player_2]
+        logger.info(f"Registering p0 agent : {player_1}")
         self.p0 = p0_agent()
-        logger.info(f"Registering p1 agent : {player_1}")
+        logger.info(f"Registering p1 agent : {player_2}")
         self.p1 = p1_agent()
         self.player_names = {0: "A", 1: "B"}
         self.dir_names = {0: "Up", 1: "Right", 2: "Down", 3: "Left"}
