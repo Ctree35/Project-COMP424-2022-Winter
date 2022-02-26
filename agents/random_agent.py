@@ -12,6 +12,7 @@ class RandomAgent(Agent):
     def __init__(self):
         super(RandomAgent, self).__init__()
         self.name = "RandomAgent"
+        self.autoplay = True
     
     def step(self, chess_board, my_pos, adv_pos, max_step):
         # Moves (Up, Right, Down, Left)

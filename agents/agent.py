@@ -4,6 +4,8 @@ class Agent:
         Initialize the agent, add a name which is used to register the agent
         """
         self.name = "DummyAgent"
+        # Flag to indicate whether the agent can be used to autoplay
+        self.autoplay = False
 
     def __str__(self) -> str:
         return self.name
