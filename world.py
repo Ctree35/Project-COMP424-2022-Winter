@@ -13,11 +13,20 @@ logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
+# Constants
 MIN_BOARD_SIZE = 5
 MAX_BOARD_SIZE = 10
 AGENT_NOT_FOUND_MSG = (
     "Check if you have used the decorator @register_agent to register your agent!"
 )
+DIRECTION_UP = 0
+DIRECTION_RIGHT = 1
+DIRECTION_DOWN = 2
+DIRECTION_LEFT = 3
+PLAYER_1_ID = 0
+PLAYER_2_ID = 1
+PLAYER_1_NAME = "A"
+PLAYER_2_NAME = "B"
 
 
 class World:
@@ -63,8 +72,13 @@ class World:
         self.p0 = p0_agent()
         logger.info(f"Registering p1 agent : {player_2}")
         self.p1 = p1_agent()
-        self.player_names = {0: "A", 1: "B"}
-        self.dir_names = {0: "Up", 1: "Right", 2: "Down", 3: "Left"}
+        self.player_names = {PLAYER_1_ID: PLAYER_1_NAME, PLAYER_2_ID: PLAYER_2_NAME}
+        self.dir_names = {
+            DIRECTION_UP: "Up",
+            DIRECTION_RIGHT: "Right",
+            DIRECTION_DOWN: "Down",
+            DIRECTION_LEFT: "Left",
+        }
 
         # Moves (Up, Right, Down, Left)
         self.moves = ((-1, 0), (0, 1), (1, 0), (0, -1))
@@ -115,6 +129,16 @@ class World:
             self.render()
 
     def step(self):
+        """
+        Take a step in the game world.
+        Runs the agents' step function and update the game board accordingly.
+        If the agents' step function raises an exception, the step will be replaced by a Random Walk.
+
+        Returns
+        -------
+        results: tuple
+            The results of the step containing (is_endgame, player_1_score, player_2_score)
+        """
         if not self.turn:
             cur_player = self.p0
             cur_pos = self.p0_pos
@@ -189,6 +213,18 @@ class World:
         return results
 
     def check_valid_step(self, start_pos, end_pos, barrier_dir):
+        """
+        Check if the step the agent takes is valid (reachable and within max steps).
+
+        Parameters
+        ----------
+        start_pos : tuple
+            The start position of the agent.
+        end_pos : tuple
+            The end position of the agent.
+        barrier_dir : int
+            The direction of the barrier.
+        """
         # Endpoint already has barrier or is boarder
         r, c = end_pos
         if self.chess_board[r, c, barrier_dir]:
@@ -225,6 +261,18 @@ class World:
         return is_reached
 
     def check_endgame(self):
+        """
+        Check if the game ends and compute the current score of the agents.
+
+        Returns
+        -------
+        is_endgame : bool
+            Whether the game ends.
+        player_1_score : int
+            The score of player 1.
+        player_2_score : int
+            The score of player 2.
+        """
         # Union-Find
         father = dict()
         for r in range(self.board_size):
@@ -278,6 +326,16 @@ class World:
         return 0 <= r < self.board_size and 0 <= c < self.board_size
 
     def random_walk(self, my_pos, adv_pos):
+        """
+        Randomly walk to the next position in the board.
+
+        Parameters
+        ----------
+        my_pos : tuple
+            The position of the agent.
+        adv_pos : tuple
+            The position of the adversary.
+        """
         ori_pos = deepcopy(my_pos)
         steps = np.random.randint(0, self.max_step + 1)
         # Random Walk

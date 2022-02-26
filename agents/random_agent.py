@@ -3,7 +3,7 @@ from copy import deepcopy
 from agents.agent import Agent
 from store import register_agent
 
-
+# Important: you should register your agent with a name
 @register_agent("random_agent")
 class RandomAgent(Agent):
     """

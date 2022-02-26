@@ -24,6 +24,30 @@ class UIEngine:
         set_bottom_wall=False,
         color="silver",
     ):
+        """
+        Plot a box with configurable walls
+
+        Parameters
+        ----------
+        x : int
+            x position of the box
+        y : int
+            y position of the box
+        w : int
+            width of the box
+        text : str
+            text to display in the box
+        set_left_wall : bool
+            set left wall
+        set_right_wall : bool
+            set right wall
+        set_top_wall : bool
+            set top wall
+        set_bottom_wall : bool
+            set bottom wall
+        color : str
+            color of the wall
+        """
         # left wall
         plt.plot([x, x], [y, y + w], "-", lw=2, color="red" if set_left_wall else color)
         # top wall
@@ -50,6 +74,9 @@ class UIEngine:
             plt.text(x + w / 2, y + w / 2, text, ha="center", va="center")
 
     def plot_grid(self):
+        """
+        Plot the grid of the game
+        """
         for x in range(1, self.grid_size[0] * 2 + 1, 2):
             for y in range(1, self.grid_size[1] * 2 + 1, 2):
                 self.plot_box(x, y, 2)
@@ -57,12 +84,29 @@ class UIEngine:
     def plot_game_boundary(
         self,
     ):
+        """
+        Plot the boundary of the game
+        """
         # start y=3 as the y in the range ends in 3
         self.plot_box(1, 3, self.grid_size[0] + self.grid_size[1], color="black")
 
     def plot_grid_with_board(
         self, chess_board, player_1_pos=None, player_2_pos=None, debug=False
     ):
+        """
+        Main function to plot the grid of the game
+
+        Parameters
+        ----------
+        chess_board : np.array of size (grid_size[0], grid_size[1], 4)
+            chess board
+        player_1_pos : tuple of int
+            position of player 1
+        player_2_pos : tuple of int
+            position of player 2
+        debug : bool
+            if True, plot the position of the players
+        """
         x_pos = 0
         for y in range(self.grid_size[1] * 2 + 1, 1, -2):
             y_pos = 0
@@ -98,6 +142,9 @@ class UIEngine:
             x_pos += 1
 
     def fix_axis(self):
+        """
+        Fix the axis of the plot and set labels
+        """
         # Set X labels
         ticks = list(range(0, self.grid_size[0] * 2))
         labels = [x // 2 for x in ticks]
@@ -116,6 +163,9 @@ class UIEngine:
         plt.ylabel("X Position", position="top")
 
     def plot_text_info(self):
+        """
+        Plot game textual information in the bottom
+        """
         turn = 1 - self.world.turn
         agent_0 = f"A: {self.world.p0}"
         agent_1 = f"B: {self.world.p1}"
@@ -161,12 +211,17 @@ class UIEngine:
     def render(self, chess_board, p1_pos, p2_pos, debug=False):
         """
         Render the board along with player positions
-        Arguments:
 
-        - chess_board: 3D array of pieces
-        - p1_pos: position of player 1
-        - p2_pos: position of player 2
-        - debug: if True, display the position of each piece
+        Parameters
+        ----------
+        chess_board : np.array of size (grid_size[0], grid_size[1], 4)
+            3D array of pieces
+        p1_pos : tuple of int
+            position of player 1
+        p2_pos : tuple of int
+            position of player 2
+        debug : bool
+            if True, display the position of each piece
 
         """
         plt.clf()
