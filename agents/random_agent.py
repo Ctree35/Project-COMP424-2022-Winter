@@ -1,9 +1,14 @@
 import numpy as np
 from copy import deepcopy
 from agents.agent import Agent
+from store import register_agent
 
 
+@register_agent("random_agent")
 class RandomAgent(Agent):
+    """
+    Example of an agent which takes random decisions
+    """
     def __init__(self):
         super(RandomAgent, self).__init__()
         self.name = "RandomAgent"

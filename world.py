@@ -1,12 +1,13 @@
 # TODO: refactor code to make it readable (e.g., set consts)
 import numpy as np
-from agents.random_agent import RandomAgent
 from copy import deepcopy
 import traceback
+from agents import *
 from ui import UIEngine
 from time import sleep
 import click
 import logging
+from store import AGENT_REGISTRY
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
@@ -14,7 +15,13 @@ logger = logging.getLogger(__name__)
 
 
 class World:
-    def __init__(self, display_ui=False, display_delay=2):
+    def __init__(
+        self,
+        player_0="random_agent",
+        player_1="random_agent",
+        display_ui=False,
+        display_delay=2,
+    ):
         """
         Initialize the game world
 
@@ -27,9 +34,18 @@ class World:
         """
         # Two players
         logger.info("Initialize the game world")
-        # TODO: load agents from agent files
-        self.p0 = RandomAgent()
-        self.p1 = RandomAgent()
+        # Load agents as defined in decorators
+        if player_0 not in AGENT_REGISTRY:
+            raise ValueError(f"Agent {player_0} is not registered")
+        if player_1 not in AGENT_REGISTRY:
+            raise ValueError(f"Agent {player_1} is not registered")
+
+        p0_agent = AGENT_REGISTRY[player_0]
+        p1_agent = AGENT_REGISTRY[player_1]
+        logger.info(f"Registering p0 agent : {player_0}")
+        self.p0 = p0_agent()
+        logger.info(f"Registering p1 agent : {player_1}")
+        self.p1 = p1_agent()
         self.player_names = {0: "A", 1: "B"}
         self.dir_names = {0: "Up", 1: "Right", 2: "Down", 3: "Left"}
 
