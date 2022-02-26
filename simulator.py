@@ -6,6 +6,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--player_1", type=str, default="random_agent")
     parser.add_argument("--player_2", type=str, default="random_agent")
+    parser.add_argument("--board_size", type=int, default=None)
     parser.add_argument("--display", action="store_true", default=False)
     parser.add_argument("--display_delay", type=float, default=0.4)
     args = parser.parse_args()
@@ -13,10 +14,19 @@ def get_args():
 
 
 class Simulator:
+    """
+    Entry point of the game simulator.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+    """
+
     def __init__(self, args):
         self.world = World(
             player_1=args.player_1,
             player_2=args.player_2,
+            board_size=args.board_size,
             display_ui=args.display,
             display_delay=args.display_delay,
         )

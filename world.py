@@ -13,6 +13,8 @@ logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
+MIN_BOARD_SIZE = 5
+MAX_BOARD_SIZE = 10
 AGENT_NOT_FOUND_MSG = (
     "Check if you have used the decorator @register_agent to register your agent!"
 )
@@ -23,6 +25,7 @@ class World:
         self,
         player_1="random_agent",
         player_2="random_agent",
+        board_size=None,
         display_ui=False,
         display_delay=2,
     ):
@@ -35,6 +38,8 @@ class World:
             The registered class of the first player
         player_2: str
             The registered class of the second player
+        board_size: int
+            The size of the board. If None, board_size = a number between MIN_BOARD_SIZE and MAX_BOARD_SIZE
         display_ui : bool
             Whether to display the game board
         display_delay : float
@@ -64,14 +69,21 @@ class World:
         # Moves (Up, Right, Down, Left)
         self.moves = ((-1, 0), (0, 1), (1, 0), (0, -1))
 
-        # Random chessboard size
-        self.board_size = np.random.randint(5, 10)
+        if board_size is None:
+            # Random chessboard size
+            self.board_size = np.random.randint(MIN_BOARD_SIZE, MAX_BOARD_SIZE)
+            logger.info(
+                f"No board size specified. Randomly generating size : {self.board_size}x{self.board_size}"
+            )
+        else:
+            self.board_size = board_size
+            logger.info(f"Setting board size to {self.board_size}x{self.board_size}")
 
         # Index in dim2 represents [Up, Right, Down, Left] respectively
         # Record barriers and boarders for each block
         self.chess_board = np.zeros((self.board_size, self.board_size, 4), dtype=bool)
 
-        # Set boarders
+        # Set borders
         self.chess_board[0, :, 0] = True
         self.chess_board[:, 0, 3] = True
         self.chess_board[-1, :, 2] = True
@@ -250,8 +262,10 @@ class World:
         logging.info(
             f"Game ends! Player {self.player_names[player_win]} wins having control over {win_blocks} blocks!"
         )
-        click.echo("Press a button to exit the game.")
-        _ = click.getchar()
+        if self.display_ui:
+            # If displaying the ui, wait for user input
+            click.echo("Press a button to exit the game.")
+            _ = click.getchar()
         return True, p0_score, p1_score
 
     def check_boundary(self, pos):
