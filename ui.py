@@ -1,5 +1,5 @@
 ## UI Placeholder
-from turtle import down
+from turtle import down, position
 import matplotlib.pyplot as plt
 
 
@@ -96,6 +96,22 @@ class UIEngine:
                 y_pos += 1
             x_pos += 1
 
+    def fix_axis(self):
+        # Set X labels
+        ticks = list(range(0, self.grid_size[0] * 2))
+        labels = [x // 2 for x in ticks]
+        ticks = [x + 2 for i, x in enumerate(ticks) if i % 2 == 0]
+        labels = [x for i, x in enumerate(labels) if i % 2 == 0]
+        plt.xticks(ticks, labels)
+        # Set Y labels
+        ticks = list(range(0, self.grid_size[1] * 2))
+        labels = [x // 2 for x in ticks]
+        ticks = [x + 3 for i, x in enumerate(ticks) if i % 2 == 1]
+        labels = [x for i, x in enumerate(reversed(labels)) if i % 2 == 1]
+        plt.yticks(ticks, labels)
+        # move x axis to top
+        plt.tick_params(bottom=False, labelbottom=False, top=True, labeltop=True)
+
     def render(self, chess_board, p1_pos, p2_pos, debug=False):
         """
         Render the board along with player positions
@@ -110,6 +126,7 @@ class UIEngine:
         plt.clf()
         self.plot_grid_with_board(chess_board, p1_pos, p2_pos, debug=debug)
         self.plot_game_boundary()
+        self.fix_axis()
         plt.pause(0.1)
 
 
