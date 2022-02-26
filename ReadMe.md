@@ -1,6 +1,8 @@
 # Colosseum Survival!
 
-![intro_img](https://cdn.britannica.com/36/162636-050-932C5D49/Colosseum-Rome-Italy.jpg?w=690&h=388&c=crop)
+<p align="center">
+  <img src="https://cdn.britannica.com/36/162636-050-932C5D49/Colosseum-Rome-Italy.jpg?w=690&h=388&c=crop">
+</p>
 
 ## Note
 
@@ -29,7 +31,9 @@ We have provided an example agent implementation in `agents.RandomAgent`. After 
 
 ## Gameboard
 
-![gameboard](Gameboard.png)
+<p align="center">
+  <img src="Gameboard.png" width="600" height="600">
+</p>
 
 ## Game Setting
 On an $`M \times M`$ chess board, $`n`$ players are randomly distributed on the board with one player occupying one block.
@@ -53,6 +57,8 @@ Each player should maximize the final score of itself, i.e., the number of block
 ## Example Gameplay
 Here we show a gameplay describing a $`2`$-player game on a $`5\times 5`$ chessboard. Each player can move at most $`3`$ steps in each round.
 
-![Gameplay](Gameplay.gif)
+<p align="center">
+  <img src="Gameplay.gif" width="600" height="600">
+</p>
 
 The final score is $`A:B = 15:10`$. So A wins the game.
