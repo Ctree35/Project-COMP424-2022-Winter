@@ -8,6 +8,7 @@ from time import sleep
 import click
 import logging
 from store import AGENT_REGISTRY
+import sys
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
@@ -179,10 +180,13 @@ class World:
             if not self.check_valid_step(cur_pos, next_pos, dir):
                 raise ValueError(
                     "Not a valid step from {} to {} and put barrier at {}, with max steps = {}".format(
-                        next_pos, cur_pos, dir, self.max_step
+                        cur_pos, next_pos, dir, self.max_step
                     )
                 )
-        except:
+        except BaseException as e:
+            ex_type = type(e).__name__
+            if "SystemExit" in ex_type or "KeyboardInterrupt" in ex_type:
+                sys.exit(0)
             print(
                 "An exception raised. The traceback is as follows:\n{}".format(
                     traceback.format_exc()
@@ -231,7 +235,7 @@ class World:
         ----------
         start_pos : tuple
             The start position of the agent.
-        end_pos : tuple
+        end_pos : np.ndarray
             The end position of the agent.
         barrier_dir : int
             The direction of the barrier.
