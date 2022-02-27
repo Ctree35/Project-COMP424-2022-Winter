@@ -8,6 +8,14 @@
 
 We currently only support $`2`$-player version of this game. 
 
+## Setup
+
+To setup the game, clone this repository and install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Playing a game
 
 To start playing a game, we need to implement _agents_. For example, to play the game using two random agents (agents which take a random action), run the following:
