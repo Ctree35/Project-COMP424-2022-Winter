@@ -40,7 +40,7 @@ def world_1(world_init):
         (3, 2, 0),
         (4, 0, 1),
         (4, 1, 0),
-        (4, 1, 3)
+        (4, 1, 3),
     )
     for bar in barriers:
         world_init.chess_board[bar] = True
@@ -75,7 +75,7 @@ def world_2(world_init):
         (3, 2, 0),
         (4, 0, 1),
         (4, 1, 0),
-        (4, 1, 3)
+        (4, 1, 3),
     )
     for bar in barriers:
         world_init.chess_board[bar] = True
