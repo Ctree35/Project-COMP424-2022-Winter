@@ -345,12 +345,17 @@ class World:
         if p0_score > p1_score:
             player_win = 0
             win_blocks = p0_score
-        else:
+        elif p0_score < p1_score:
             player_win = 1
             win_blocks = p1_score
-        logging.info(
-            f"Game ends! Player {self.player_names[player_win]} wins having control over {win_blocks} blocks!"
-        )
+        else:
+            player_win = -1  # Tie
+        if player_win >= 0:
+            logging.info(
+                f"Game ends! Player {self.player_names[player_win]} wins having control over {win_blocks} blocks!"
+            )
+        else:
+            logging.info("Game ends! Tie!")
         return True, p0_score, p1_score
 
     def check_boundary(self, pos):

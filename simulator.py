@@ -74,7 +74,10 @@ class Simulator:
                 p0_score, p1_score = self.run()
                 if p0_score > p1_score:
                     p1_win_count += 1
-                else:
+                elif p0_score < p1_score:
+                    p2_win_count += 1
+                else:  # Tie
+                    p1_win_count += 1
                     p2_win_count += 1
 
         logger.info(
