@@ -71,10 +71,10 @@ class World:
 
         self.player_names = {PLAYER_1_ID: PLAYER_1_NAME, PLAYER_2_ID: PLAYER_2_NAME}
         self.dir_names = {
-            DIRECTION_UP: "Up",
-            DIRECTION_RIGHT: "Right",
-            DIRECTION_DOWN: "Down",
-            DIRECTION_LEFT: "Left",
+            DIRECTION_UP: DIRECTION_UP_NAME,
+            DIRECTION_RIGHT: DIRECTION_RIGHT_NAME,
+            DIRECTION_DOWN: DIRECTION_DOWN_NAME,
+            DIRECTION_LEFT: DIRECTION_LEFT_NAME,
         }
 
         # Moves (Up, Right, Down, Left)
