@@ -1,5 +1,4 @@
 ## UI Placeholder
-from turtle import down, position
 import matplotlib.pyplot as plt
 from constants import *
 
