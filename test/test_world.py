@@ -51,8 +51,8 @@ def test_check_valid_step_fail(world_1, end_pos, dir):
 def test_check_endgame_world_1(world_1):
     is_end, p0_score, p1_score = world_1.check_endgame()
     assert not is_end
-    assert p0_score == 0
-    assert p1_score == 0
+    assert p0_score == 25
+    assert p1_score == 25
 
 
 def test_check_endgame_world_2(world_2):
