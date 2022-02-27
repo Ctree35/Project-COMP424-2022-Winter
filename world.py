@@ -1,4 +1,3 @@
-# TODO: refactor code to make it readable (e.g., set consts)
 import numpy as np
 from copy import deepcopy
 import traceback
@@ -94,6 +93,9 @@ class World:
 
         # Moves (Up, Right, Down, Left)
         self.moves = ((-1, 0), (0, 1), (1, 0), (0, -1))
+        
+        # Opposite Directions
+        self.opposites = {0: 2, 1: 3, 2: 0, 3: 1}
 
         if board_size is None:
             # Random chessboard size
@@ -115,6 +117,24 @@ class World:
         self.chess_board[-1, :, 2] = True
         self.chess_board[:, -1, 1] = True
 
+        # Maximum Steps
+        self.max_step = (self.board_size + 1) // 2
+        
+        # Random barriers (symmetric)
+        for _ in range(self.max_step):
+            pos = np.random.randint(0, self.board_size, size=2)
+            r, c = pos
+            dir = np.random.randint(0, 4)
+            while self.chess_board[r, c, dir]:
+                pos = np.random.randint(0, self.board_size, size=2)
+                r, c = pos
+                dir = np.random.randint(0, 4)
+            anti_pos = self.board_size - 1 - pos
+            anti_dir = self.opposites[dir]
+            anti_r, anti_c = anti_pos
+            self.set_barrier(r, c, dir)
+            self.set_barrier(anti_r, anti_c, anti_dir)
+
         # Random start position (symmetric but not overlap)
         self.p0_pos = np.random.randint(0, self.board_size, size=2)
         self.p1_pos = self.board_size - 1 - self.p0_pos
@@ -124,8 +144,8 @@ class World:
         # Whose turn to step
         self.turn = 0
 
-        # Maximum Steps
-        self.max_step = (self.board_size + 1) // 2
+        # Check initialization
+        self.initial_end, _, _ = self.check_endgame()
 
         # Cache to store and use the data
         self.results_cache = ()
@@ -139,7 +159,7 @@ class World:
             )
             self.ui_engine = UIEngine(self.board_size, self)
             self.render()
-
+        
     def step(self):
         """
         Take a step in the game world.
@@ -185,7 +205,7 @@ class World:
                 )
         except BaseException as e:
             ex_type = type(e).__name__
-            if "SystemExit" in ex_type or "KeyboardInterrupt" in ex_type:
+            if ("SystemExit" in ex_type and isinstance(cur_player, HumanAgent)) or "KeyboardInterrupt" in ex_type:
                 sys.exit(0)
             print(
                 "An exception raised. The traceback is as follows:\n{}".format(
@@ -207,11 +227,8 @@ class World:
             self.p1_pos = next_pos
         # Set the barrier to True
         r, c = next_pos
-        self.chess_board[r, c, dir] = True
-        # Set the opposite barrier to True
-        opposites = {0: 2, 1: 3, 2: 0, 3: 1}
-        move = self.moves[dir]
-        self.chess_board[r + move[0], c + move[1], opposites[dir]] = True
+        self.set_barrier(r, c, dir)
+
         # Change turn
         self.turn = 1 - self.turn
 
@@ -339,6 +356,13 @@ class World:
     def check_boundary(self, pos):
         r, c = pos
         return 0 <= r < self.board_size and 0 <= c < self.board_size
+    
+    def set_barrier(self, r, c, dir):
+        # Set the barrier to True
+        self.chess_board[r, c, dir] = True
+        # Set the opposite barrier to True
+        move = self.moves[dir]
+        self.chess_board[r + move[0], c + move[1], self.opposites[dir]] = True
 
     def random_walk(self, my_pos, adv_pos):
         """

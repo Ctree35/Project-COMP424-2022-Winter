@@ -46,6 +46,9 @@ class Simulator:
             display_delay=self.args.display_delay,
             autoplay=self.args.autoplay,
         )
+        if self.world.initial_end:
+            logger.warning("Initialization failed! Reset the world again!")
+            self.reset()
 
     def run(self):
         self.reset()
