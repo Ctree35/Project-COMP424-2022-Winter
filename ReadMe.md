@@ -18,13 +18,13 @@ pip install -r requirements.txt
 
 ## Playing a game
 
-To start playing a game, we need to implement _agents_. For example, to play the game using two random agents (agents which take a random action), run the following:
+To start playing a game, we need to implement [_agents_](agents/agent.py). For example, to play the game using two random agents (agents which take a random action), run the following:
 
 ```bash
 python simulator.py --player_1 random_agent --player_2 random_agent
 ```
 
-This will spawn a random game board of size NxN, and run the two agents. You will be able to see their moves in the console.
+This will spawn a random game board of size NxN, and run the two agents of class [RandomAgent](agents/random_agent.py). You will be able to see their moves in the console.
 
 ## Visualizing a game
 
@@ -36,7 +36,7 @@ python simulator.py --player_1 random_agent --player_2 random_agent --display
 
 ## Play on your own!
 
-To play the game on your own, use a `human_agent` to play the game.
+To play the game on your own, use a [`human_agent`](agents/human_agent.py) to play the game.
 
 ```bash
 python simulator.py --player_1 human_agent --player_2 random_agent --display
@@ -44,7 +44,7 @@ python simulator.py --player_1 human_agent --player_2 random_agent --display
 
 ## Autoplaying multiple games
 
-Since boards are drawn randomly (between a `MIN_BOARD_SIZE` and `MAX_BOARD_SIZE`) you can compute an aggregate win % over your agents. Use the `--autoplay` flag to run $n$ games sequentially, where $n$ can be set using `--autoplay_runs`.
+Since boards are drawn randomly (between a [`MIN_BOARD_SIZE`](world.py#L17) and [`MAX_BOARD_SIZE`](world.py#L18)) you can compute an aggregate win % over your agents. Use the `--autoplay` flag to run $n$ games sequentially, where $n$ can be set using `--autoplay_runs`.
 
 ```bash
 python simulator.py --player_1 random_agent --player_2 random_agent --autoplay
@@ -52,17 +52,17 @@ python simulator.py --player_1 random_agent --player_2 random_agent --autoplay
 
 **Notes**
 
-- Not all agents supports autoplay. The variable `self.autoplay` in Agent can be set to `True` to allow the agent to be autoplayed. Typically this flag is set to false for a `human_agent`.
+- Not all agents supports autoplay. The variable `self.autoplay` in [Agent](agents/agent.py) can be set to `True` to allow the agent to be autoplayed. Typically this flag is set to false for a `human_agent`.
 - UI display will be disabled in an autoplay.
 
 ## Write your own agent
 
 You need to write your own agent and submit it for the class project. To do so: 
 
-1. Create a new file in `agents/` directory, and extend the `agents.Agent` class. 
+1. Create a new file in [`agents/`](agents/) directory, and extend the [`agents.Agent`](agents/agent.py) class. 
 2. Implement the `step` function with your game logic
-3. Register your agent using the decorator `register_agent`
-4. Import your agent in the `__init__.py` file in `agents/` directory
+3. Register your agent using the decorator [`register_agent`](agents/random_agent.py#L7)
+4. Import your agent in the [`__init__.py`](agents/__init__.py) file in [`agents/`](agents/) directory
 5. Run and test your agent using the information above
 6. Check autoplay with your agent and `random_agent` is working
 
