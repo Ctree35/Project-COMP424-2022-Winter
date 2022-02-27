@@ -54,8 +54,9 @@ You need to write your own agent and submit it for the class project. To do so:
 1. Create a new file in `agents/` directory, and extend the `agents.Agent` class. 
 2. Implement the `step` function with your game logic
 3. Register your agent using the decorator `register_agent`
-4. Run and test your agent using the information above
-5. Check autoplay with your agent and `random_agent` is working
+4. Import your agent in the `__init__.py` file in `agents/` directory
+5. Run and test your agent using the information above
+6. Check autoplay with your agent and `random_agent` is working
 
 ## Full API
 
@@ -76,10 +77,6 @@ optional arguments:
   --autoplay_runs AUTOPLAY_RUNS
 ```
 
-
-## Write your own agents
-
-We have provided an example agent implementation in `agents.RandomAgent`. After implementing your own in the agents directory, register your agent using the decorator `@register_agent`. You can also play this game with human players using `agents.HumanAgent`.
 
 ## Gameboard
 
