@@ -1,6 +1,7 @@
 ## UI Placeholder
 from turtle import down, position
 import matplotlib.pyplot as plt
+from constants import *
 
 
 class UIEngine:
@@ -71,7 +72,20 @@ class UIEngine:
             [x, x + w], [y, y], "-", lw=2, color="red" if set_bottom_wall else color
         )
         if len(text) > 0:
-            plt.text(x + w / 2, y + w / 2, text, ha="center", va="center")
+            color = "black"
+            if text == PLAYER_1_NAME:
+                color = PLAYER_1_COLOR
+            elif text == PLAYER_2_NAME:
+                color = PLAYER_2_COLOR
+            plt.text(
+                x + w / 2,
+                y + w / 2,
+                text,
+                ha="center",
+                va="center",
+                color="white",
+                bbox=dict(facecolor=color, edgecolor=color, boxstyle="round"),
+            )
 
     def plot_grid(self):
         """
@@ -167,14 +181,15 @@ class UIEngine:
         Plot game textual information in the bottom
         """
         turn = 1 - self.world.turn
-        agent_0 = f"A: {self.world.p0}"
-        agent_1 = f"B: {self.world.p1}"
+        agent_0 = f"{PLAYER_1_NAME}: {self.world.p0}"
+        agent_1 = f"{PLAYER_2_NAME}: {self.world.p1}"
         plt.figtext(
             0.15,
             0.1,
             agent_0,
             wrap=True,
             horizontalalignment="left",
+            color=PLAYER_1_COLOR,
             fontweight="bold" if turn == 0 else "normal",
         )
         plt.figtext(
@@ -183,6 +198,7 @@ class UIEngine:
             agent_1,
             wrap=True,
             horizontalalignment="left",
+            color=PLAYER_2_COLOR,
             fontweight="bold" if turn == 1 else "normal",
         )
 

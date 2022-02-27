@@ -7,26 +7,12 @@ from time import sleep
 import click
 import logging
 from store import AGENT_REGISTRY
+from constants import *
 import sys
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-
-# Constants
-MIN_BOARD_SIZE = 5
-MAX_BOARD_SIZE = 10
-AGENT_NOT_FOUND_MSG = (
-    "Check if you have used the decorator @register_agent to register your agent!"
-)
-DIRECTION_UP = 0
-DIRECTION_RIGHT = 1
-DIRECTION_DOWN = 2
-DIRECTION_LEFT = 3
-PLAYER_1_ID = 0
-PLAYER_2_ID = 1
-PLAYER_1_NAME = "A"
-PLAYER_2_NAME = "B"
 
 
 class World:
@@ -93,7 +79,7 @@ class World:
 
         # Moves (Up, Right, Down, Left)
         self.moves = ((-1, 0), (0, 1), (1, 0), (0, -1))
-        
+
         # Opposite Directions
         self.opposites = {0: 2, 1: 3, 2: 0, 3: 1}
 
@@ -119,7 +105,7 @@ class World:
 
         # Maximum Steps
         self.max_step = (self.board_size + 1) // 2
-        
+
         # Random barriers (symmetric)
         for _ in range(self.max_step):
             pos = np.random.randint(0, self.board_size, size=2)
@@ -159,7 +145,7 @@ class World:
             )
             self.ui_engine = UIEngine(self.board_size, self)
             self.render()
-        
+
     def step(self):
         """
         Take a step in the game world.
@@ -205,7 +191,9 @@ class World:
                 )
         except BaseException as e:
             ex_type = type(e).__name__
-            if ("SystemExit" in ex_type and isinstance(cur_player, HumanAgent)) or "KeyboardInterrupt" in ex_type:
+            if (
+                "SystemExit" in ex_type and isinstance(cur_player, HumanAgent)
+            ) or "KeyboardInterrupt" in ex_type:
                 sys.exit(0)
             print(
                 "An exception raised. The traceback is as follows:\n{}".format(
@@ -361,7 +349,7 @@ class World:
     def check_boundary(self, pos):
         r, c = pos
         return 0 <= r < self.board_size and 0 <= c < self.board_size
-    
+
     def set_barrier(self, r, c, dir):
         # Set the barrier to True
         self.chess_board[r, c, dir] = True
