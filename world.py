@@ -37,6 +37,7 @@ class World:
         board_size=None,
         display_ui=False,
         display_delay=2,
+        autoplay=False,
     ):
         """
         Initialize the game world
@@ -53,6 +54,8 @@ class World:
             Whether to display the game board
         display_delay : float
             Delay between each step
+        autoplay : bool
+            Whether the game is played in autoplay mode
         """
         # Two players
         logger.info("Initialize the game world")
@@ -72,6 +75,14 @@ class World:
         self.p0 = p0_agent()
         logger.info(f"Registering p1 agent : {player_2}")
         self.p1 = p1_agent()
+
+        # check autoplay
+        if autoplay:
+            if not self.p0.autoplay or not self.p1.autoplay:
+                raise ValueError(
+                    f"Autoplay mode is not supported by one of the agents ({self.p0} -> {self.p0.autoplay}, {self.p1} -> {self.p1.autoplay}). Please set autoplay=True in the agent class."
+                )
+
         self.player_names = {PLAYER_1_ID: PLAYER_1_NAME, PLAYER_2_ID: PLAYER_2_NAME}
         self.dir_names = {
             DIRECTION_UP: "Up",

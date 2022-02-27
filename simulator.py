@@ -44,6 +44,7 @@ class Simulator:
             board_size=self.args.board_size,
             display_ui=self.args.display,
             display_delay=self.args.display_delay,
+            autoplay=self.args.autoplay,
         )
 
     def run(self):

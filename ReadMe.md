@@ -8,7 +8,56 @@
 
 We currently only support $`2`$-player version of this game. 
 
-## Simulate a game
+## Playing a game
+
+To start playing a game, we need to implement _agents_. For example, to play the game using two random agents (agents which take a random action), run the following:
+
+```bash
+python simulator.py --player_1 random_agent --player_2 random_agent
+```
+
+This will spawn a random game board of size NxN, and run the two agents. You will be able to see their moves in the console.
+
+## Visualizing a game
+
+To visualize the moves within a game, use the `--display` flag. You can set the delay (in seconds) using `--display_delay` argument to better visualize the steps the agents take to win a game.
+
+```bash
+python simulator.py --player_1 random_agent --player_2 random_agent --display
+```
+
+## Play on your own!
+
+To play the game on your own, use a `human_agent` to play the game.
+
+```bash
+python simulator.py --player_1 human_agent --player_2 random_agent --display
+```
+
+## Autoplaying multiple games
+
+Since boards are drawn randomly (between a `MIN_BOARD_SIZE` and `MAX_BOARD_SIZE`) you can compute an aggregate win % over your agents. Use the `--autoplay` flag to run $n$ games sequentially, where $n$ can be set using `--autoplay_runs`.
+
+```bash
+python simulator.py --player_1 random_agent --player_2 random_agent --autoplay
+```
+
+**Notes**
+
+- Not all agents supports autoplay. The variable `self.autoplay` in Agent can be set to `True` to allow the agent to be autoplayed. Typically this flag is set to false for a `human_agent`.
+- UI display will be disabled in an autoplay.
+
+## Write your own agent
+
+You need to write your own agent and submit it for the class project. To do so: 
+
+1. Create a new file in `agents/` directory, and extend the `agents.Agent` class. 
+2. Implement the `step` function with your game logic
+3. Register your agent using the decorator `register_agent`
+4. Run and test your agent using the information above
+5. Check autoplay with your agent and `random_agent` is working
+
+## Full API
 
 ```bash
 python simulator.py -h       
@@ -23,7 +72,10 @@ optional arguments:
   --board_size BOARD_SIZE
   --display
   --display_delay DISPLAY_DELAY
+  --autoplay
+  --autoplay_runs AUTOPLAY_RUNS
 ```
+
 
 ## Write your own agents
 
