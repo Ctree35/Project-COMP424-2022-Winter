@@ -4,10 +4,6 @@
   <img src="https://cdn.britannica.com/36/162636-050-932C5D49/Colosseum-Rome-Italy.jpg?w=690&h=388&c=crop">
 </p>
 
-## Note
-
-We currently only support $`2`$-player version of this game. 
-
 ## Setup
 
 To setup the game, clone this repository and install the dependencies:
@@ -93,14 +89,14 @@ optional arguments:
 </p>
 
 ### Game Setting
-On an $`M \times M`$ chess board, $`n`$ players are randomly distributed on the board with one player occupying one block.
+On an *M* x *M* chess board, 2 players are randomly distributed on the board with one player occupying one block.
 
 ### Game Moving
-In each iteration, one player moves at most $`K`$ steps (between $`0`$ and $`K`$) in either horizontal or vertical direction, and must put a barrier around him or her in one of the 4 directions except the boarders of the chess board. The players move in a round-robin way.
+In each iteration, one player moves at most `K` steps (between `0` and `K`) in either horizontal or vertical direction, and must put a barrier around him or her in one of the 4 directions except the boarders of the chess board. The players move in a round-robin way.
 
 #### Note: 
  - Each player cannot go into other player's place or put barriers in areas that already have barriers.
- - Currently the maximal number of steps is set to $`K = (M + 1) // 2`$.
+ - Currently the maximal number of steps is set to `K = (M + 1) // 2`.
 
 ### Game Ending
 The game ends when each player is separated in a closed zone by the barriers and boundaries. The final score for each player will be the number of blocks in that zone.
