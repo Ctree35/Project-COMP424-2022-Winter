@@ -170,7 +170,7 @@ class UIEngine:
         agent_0 = f"A: {self.world.p0}"
         agent_1 = f"B: {self.world.p1}"
         plt.figtext(
-            0.2,
+            0.15,
             0.1,
             agent_0,
             wrap=True,
@@ -178,7 +178,7 @@ class UIEngine:
             fontweight="bold" if turn == 0 else "normal",
         )
         plt.figtext(
-            0.2,
+            0.15,
             0.05,
             agent_1,
             wrap=True,
@@ -188,7 +188,7 @@ class UIEngine:
 
         if len(self.world.results_cache) > 0:
             plt.figtext(
-                0.5,
+                0.4,
                 0.1,
                 f"Scores: A: [{self.world.results_cache[1]}], B: [{self.world.results_cache[2]}]",
                 horizontalalignment="left",
@@ -200,13 +200,17 @@ class UIEngine:
                     else "B"
                 )
                 plt.figtext(
-                    0.5,
+                    0.4,
                     0.05,
                     f"Player {win_player} wins!",
                     horizontalalignment="left",
                     fontweight="bold",
                     color="green",
                 )
+
+        plt.figtext(
+            0.7, 0.1, f"Max steps: {self.world.max_step}", horizontalalignment="left"
+        )
 
     def render(self, chess_board, p1_pos, p2_pos, debug=False):
         """
