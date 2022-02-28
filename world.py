@@ -346,7 +346,7 @@ class World:
                 f"Game ends! Player {self.player_names[player_win]} wins having control over {win_blocks} blocks!"
             )
         else:
-            logging.info("Game ends! Tie!")
+            logging.info("Game ends! It is a Tie!")
         return True, p0_score, p1_score
 
     def check_boundary(self, pos):

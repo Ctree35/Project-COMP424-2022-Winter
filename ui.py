@@ -209,15 +209,18 @@ class UIEngine:
                 horizontalalignment="left",
             )
             if self.world.results_cache[0]:
-                win_player = (
-                    "A"
-                    if self.world.results_cache[1] > self.world.results_cache[2]
-                    else "B"
-                )
+                # Handle Tie condition
+                if self.world.results_cache[1] > self.world.results_cache[2]:
+                    win_player = "Player A wins!"
+                elif self.world.results_cache[1] < self.world.results_cache[2]:
+                    win_player = "Player B wins!"
+                else:
+                    win_player = "It is a Tie!"
+
                 plt.figtext(
                     0.4,
                     0.05,
-                    f"Player {win_player} wins!",
+                    win_player,
                     horizontalalignment="left",
                     fontweight="bold",
                     color="green",
