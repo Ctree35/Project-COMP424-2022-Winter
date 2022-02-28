@@ -229,7 +229,10 @@ class World:
             if results[0]:
                 # If game ends and displaying the ui, wait for user input
                 click.echo("Press a button to exit the game.")
-                _ = click.getchar()
+                try:
+                    _ = click.getchar()
+                except:
+                    _ = input()
         return results
 
     def check_valid_step(self, start_pos, end_pos, barrier_dir):
