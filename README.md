@@ -55,12 +55,21 @@ python simulator.py --player_1 random_agent --player_2 random_agent --autoplay
 
 You need to write your own agent and submit it for the class project. To do so: 
 
-1. Create a new file in [`agents/`](agents/) directory, and extend the [`agents.Agent`](agents/agent.py) class. 
+1. Modify the [`student_agent.py`](agents/student_agent.py) file in [`agents/`](agents/) directory, which extends the [`agents.Agent`](agents/agent.py) class. 
 2. Implement the `step` function with your game logic
-3. Register your agent using the decorator [`register_agent`](agents/random_agent.py#L7)
-4. Import your agent in the [`__init__.py`](agents/__init__.py) file in [`agents/`](agents/) directory
+3. Register your agent using the decorator [`register_agent`](agents/random_agent.py#L7). The `StudentAgent` class is already decorated with `student_agent` name, feel free to change it or keep it the same.
+4. [This step is already done for `StudentAgent`] Import your agent in the [`__init__.py`](agents/__init__.py) file in [`agents/`](agents/) directory
 5. Run and test your agent using the information above
+
+    ```
+    python simulator.py --player_1 random_agent --player_2 student_agent --display 
+    ```
+
 6. Check autoplay with your agent and `random_agent` is working
+
+    ```
+    python simulator.py --player_1 random_agent --player_2 student_agent --autoplay
+    ```
 
 ## Full API
 
