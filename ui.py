@@ -1,12 +1,14 @@
 ## UI Placeholder
 import matplotlib.pyplot as plt
 from constants import *
+from pathlib import Path
 
 
 class UIEngine:
     def __init__(self, grid_width=5, world=None) -> None:
         self.grid_size = (grid_width, grid_width)
         self.world = world
+        self.step_number = 0
         plt.figure()
         # plt.axis([0, 0, 0, 10])
         plt.ion()
@@ -253,6 +255,12 @@ class UIEngine:
         self.plot_text_info()
         plt.subplots_adjust(bottom=0.2)
         plt.pause(0.1)
+        if self.world.display_save:
+            Path(self.world.display_save_path).mkdir(parents=True, exist_ok=True)
+            plt.savefig(
+                f"{self.world.display_save_path}/{self.world.player_1_name}_{self.world.player_2_name}_{self.step_number}.pdf"
+            )
+        self.step_number += 1
 
 
 if __name__ == "__main__":

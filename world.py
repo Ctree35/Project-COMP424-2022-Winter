@@ -23,6 +23,8 @@ class World:
         board_size=None,
         display_ui=False,
         display_delay=2,
+        display_save=False,
+        display_save_path=None,
         autoplay=False,
     ):
         """
@@ -40,12 +42,18 @@ class World:
             Whether to display the game board
         display_delay : float
             Delay between each step
+        display_save : bool
+            Whether to save an image of the game board
+        display_save_path : str
+            The path to save the image
         autoplay : bool
             Whether the game is played in autoplay mode
         """
         # Two players
         logger.info("Initialize the game world")
         # Load agents as defined in decorators
+        self.player_1_name = player_1
+        self.player_2_name = player_2
         if player_1 not in AGENT_REGISTRY:
             raise ValueError(
                 f"Agent '{player_1}' is not registered. {AGENT_NOT_FOUND_MSG}"
@@ -142,6 +150,8 @@ class World:
         # UI Engine
         self.display_ui = display_ui
         self.display_delay = display_delay
+        self.display_save = display_save
+        self.display_save_path = display_save_path
         if display_ui:
             # Initialize UI Engine
             logger.info(

@@ -17,6 +17,8 @@ def get_args():
     parser.add_argument("--board_size", type=int, default=None)
     parser.add_argument("--display", action="store_true", default=False)
     parser.add_argument("--display_delay", type=float, default=0.4)
+    parser.add_argument("--display_save", action="store_true", default=False)
+    parser.add_argument("--display_save_path", type=str, default="plots/")
     parser.add_argument("--autoplay", action="store_true", default=False)
     parser.add_argument("--autoplay_runs", type=int, default=1000)
     args = parser.parse_args()
@@ -54,6 +56,8 @@ class Simulator:
             board_size=self.args.board_size,
             display_ui=self.args.display,
             display_delay=self.args.display_delay,
+            display_save=self.args.display_save,
+            display_save_path=self.args.display_save_path,
             autoplay=self.args.autoplay,
         )
         if self.world.initial_end:
