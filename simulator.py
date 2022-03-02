@@ -34,13 +34,22 @@ class Simulator:
     def __init__(self, args):
         self.args = args
 
-    def reset(self):
+    def reset(self, swap_players=False):
         """
         Reset the game
+
+        Parameters
+        ----------
+        swap_players : bool
+            if True, swap the players
         """
+        if swap_players:
+            player_1, player_2 = self.args.player_2, self.args.player_1
+        else:
+            player_1, player_2 = self.args.player_1, self.args.player_2
         self.world = World(
-            player_1=self.args.player_1,
-            player_2=self.args.player_2,
+            player_1=player_1,
+            player_2=player_2,
             board_size=self.args.board_size,
             display_ui=self.args.display,
             display_delay=self.args.display_delay,
@@ -50,8 +59,8 @@ class Simulator:
             logger.warning("Initialization failed! Reset the world again!")
             self.reset()
 
-    def run(self):
-        self.reset()
+    def run(self, swap_players=False):
+        self.reset(swap_players=swap_players)
         is_end, p0_score, p1_score = self.world.step()
         while not is_end:
             is_end, p0_score, p1_score = self.world.step()
@@ -70,8 +79,11 @@ class Simulator:
             logger.warning("Since running autoplay mode, display will be disabled")
         self.args.display = False
         with all_logging_disabled():
-            for _ in tqdm(range(self.args.autoplay_runs)):
-                p0_score, p1_score = self.run()
+            for i in tqdm(range(self.args.autoplay_runs)):
+                swap_players = i % 2 == 0
+                p0_score, p1_score = self.run(swap_players=swap_players)
+                if swap_players:
+                    p0_score, p1_score = p1_score, p0_score
                 if p0_score > p1_score:
                     p1_win_count += 1
                 elif p0_score < p1_score:

@@ -173,7 +173,7 @@ class World:
         cur_player, cur_pos, adv_pos = self.get_current_player()
 
         try:
-            # TODO: Check Timeout
+            # Run the agents step function
             next_pos, dir = cur_player.step(
                 deepcopy(self.chess_board),
                 tuple(cur_pos),
