@@ -3,7 +3,7 @@ from copy import deepcopy
 import traceback
 from agents import *
 from ui import UIEngine
-from time import sleep
+from time import sleep, time
 import click
 import logging
 from store import AGENT_REGISTRY
@@ -133,6 +133,10 @@ class World:
         # Check initialization
         self.initial_end, _, _ = self.check_endgame()
 
+        # Time taken by each player
+        self.p0_time = 0
+        self.p1_time = 0
+
         # Cache to store and use the data
         self.results_cache = ()
         # UI Engine
@@ -159,6 +163,20 @@ class World:
         else:
             return self.p1, self.p1_pos, self.p0_pos
 
+    def update_player_time(self, time_taken):
+        """
+        Update the time taken by the player
+
+        Parameters
+        ----------
+        time_taken : float
+            Time taken by the player
+        """
+        if not self.turn:
+            self.p0_time += time_taken
+        else:
+            self.p1_time += time_taken
+
     def step(self):
         """
         Take a step in the game world.
@@ -174,12 +192,15 @@ class World:
 
         try:
             # Run the agents step function
+            start_time = time()
             next_pos, dir = cur_player.step(
                 deepcopy(self.chess_board),
                 tuple(cur_pos),
                 tuple(adv_pos),
                 self.max_step,
             )
+            self.update_player_time(time() - start_time)
+
             next_pos = np.asarray(next_pos, dtype=cur_pos.dtype)
             if not self.check_boundary(next_pos):
                 raise ValueError("End position {} is out of boundary".format(next_pos))

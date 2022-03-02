@@ -3,6 +3,7 @@ import argparse
 from utils import all_logging_disabled
 import logging
 from tqdm import tqdm
+import numpy as np
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
@@ -67,7 +68,7 @@ class Simulator:
         logger.info(
             f"Run finished. Player {PLAYER_1_NAME}: {p0_score}, Player {PLAYER_2_NAME}: {p1_score}"
         )
-        return p0_score, p1_score
+        return p0_score, p1_score, self.world.p0_time, self.world.p1_time
 
     def autoplay(self):
         """
@@ -75,15 +76,24 @@ class Simulator:
         """
         p1_win_count = 0
         p2_win_count = 0
+        p1_times = []
+        p2_times = []
         if self.args.display:
             logger.warning("Since running autoplay mode, display will be disabled")
         self.args.display = False
         with all_logging_disabled():
             for i in tqdm(range(self.args.autoplay_runs)):
                 swap_players = i % 2 == 0
-                p0_score, p1_score = self.run(swap_players=swap_players)
+                p0_score, p1_score, p0_time, p1_time = self.run(
+                    swap_players=swap_players
+                )
                 if swap_players:
-                    p0_score, p1_score = p1_score, p0_score
+                    p0_score, p1_score, p0_time, p1_time = (
+                        p1_score,
+                        p0_score,
+                        p1_time,
+                        p0_time,
+                    )
                 if p0_score > p1_score:
                     p1_win_count += 1
                 elif p0_score < p1_score:
@@ -91,12 +101,14 @@ class Simulator:
                 else:  # Tie
                     p1_win_count += 1
                     p2_win_count += 1
+                p1_times.append(p0_time)
+                p2_times.append(p1_time)
 
         logger.info(
-            f"Player {PLAYER_1_NAME} win percentage: {p1_win_count / self.args.autoplay_runs}"
+            f"Player {PLAYER_1_NAME} win percentage: {p1_win_count / self.args.autoplay_runs} ({np.round(np.mean(p1_times), 5)} seconds/game)"
         )
         logger.info(
-            f"Player {PLAYER_2_NAME} win percentage: {p2_win_count / self.args.autoplay_runs}"
+            f"Player {PLAYER_2_NAME} win percentage: {p2_win_count / self.args.autoplay_runs}, ({np.round(np.mean(p2_times), 5)} seconds/game)"
         )
 
 
