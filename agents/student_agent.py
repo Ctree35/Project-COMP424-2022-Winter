@@ -36,4 +36,5 @@ class StudentAgent(Agent):
 
         Please check the sample implementation in agents/random_agent.py or agents/human_agent.py for more details.
         """
-        return my_pos, self.dir_map[0]
+        # dummy return
+        return my_pos, self.dir_map["u"]

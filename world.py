@@ -146,6 +146,19 @@ class World:
             self.ui_engine = UIEngine(self.board_size, self)
             self.render()
 
+    def get_current_player(self):
+        """
+        Get the positions of the current player
+
+        Returns
+        -------
+        tuple of (current_player_obj, current_player_pos, adversary_player_pos)
+        """
+        if not self.turn:
+            return self.p0, self.p0_pos, self.p1_pos
+        else:
+            return self.p1, self.p1_pos, self.p0_pos
+
     def step(self):
         """
         Take a step in the game world.
@@ -157,14 +170,7 @@ class World:
         results: tuple
             The results of the step containing (is_endgame, player_1_score, player_2_score)
         """
-        if not self.turn:
-            cur_player = self.p0
-            cur_pos = self.p0_pos
-            adv_pos = self.p1_pos
-        else:
-            cur_player = self.p1
-            cur_pos = self.p1_pos
-            adv_pos = self.p0_pos
+        cur_player, cur_pos, adv_pos = self.get_current_player()
 
         try:
             # TODO: Check Timeout
