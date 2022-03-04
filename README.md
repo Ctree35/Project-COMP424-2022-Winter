@@ -1,5 +1,7 @@
 # Colosseum Survival!
 
+**Project Description & Template** : https://www.overleaf.com/read/gcpfjdpqpytp 
+
 <p align="center">
   <img src="https://cdn.britannica.com/36/162636-050-932C5D49/Colosseum-Rome-Italy.jpg?w=690&h=388&c=crop">
 </p>
@@ -45,6 +47,8 @@ Since boards are drawn randomly (between a [`MIN_BOARD_SIZE`](world.py#L17) and 
 ```bash
 python simulator.py --player_1 random_agent --player_2 random_agent --autoplay
 ```
+
+During autoplay, boards are drawn randomly between size `--board_size_min` and `--board_size_max` for each iteration.
 
 **Notes**
 

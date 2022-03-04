@@ -15,6 +15,18 @@ def get_args():
     parser.add_argument("--player_1", type=str, default="random_agent")
     parser.add_argument("--player_2", type=str, default="random_agent")
     parser.add_argument("--board_size", type=int, default=None)
+    parser.add_argument(
+        "--board_size_min",
+        type=int,
+        default=6,
+        help="In autoplay mode, the minimum board size",
+    )
+    parser.add_argument(
+        "--board_size_max",
+        type=int,
+        default=12,
+        help="In autoplay mode, the maximum board size",
+    )
     parser.add_argument("--display", action="store_true", default=False)
     parser.add_argument("--display_delay", type=float, default=0.4)
     parser.add_argument("--display_save", action="store_true", default=False)
@@ -37,7 +49,7 @@ class Simulator:
     def __init__(self, args):
         self.args = args
 
-    def reset(self, swap_players=False):
+    def reset(self, swap_players=False, board_size=None):
         """
         Reset the game
 
@@ -45,7 +57,11 @@ class Simulator:
         ----------
         swap_players : bool
             if True, swap the players
+        board_size : int
+            if not None, set the board size
         """
+        if board_size is None:
+            board_size = self.args.board_size
         if swap_players:
             player_1, player_2 = self.args.player_2, self.args.player_1
         else:
@@ -53,7 +69,7 @@ class Simulator:
         self.world = World(
             player_1=player_1,
             player_2=player_2,
-            board_size=self.args.board_size,
+            board_size=board_size,
             display_ui=self.args.display,
             display_delay=self.args.display_delay,
             display_save=self.args.display_save,
@@ -64,8 +80,8 @@ class Simulator:
             logger.warning("Initialization failed! Reset the world again!")
             self.reset()
 
-    def run(self, swap_players=False):
-        self.reset(swap_players=swap_players)
+    def run(self, swap_players=False, board_size=None):
+        self.reset(swap_players=swap_players, board_size=board_size)
         is_end, p0_score, p1_score = self.world.step()
         while not is_end:
             is_end, p0_score, p1_score = self.world.step()
@@ -88,8 +104,9 @@ class Simulator:
         with all_logging_disabled():
             for i in tqdm(range(self.args.autoplay_runs)):
                 swap_players = i % 2 == 0
+                board_size = np.random.randint(args.board_size_min, args.board_size_max)
                 p0_score, p1_score, p0_time, p1_time = self.run(
-                    swap_players=swap_players
+                    swap_players=swap_players, board_size=board_size
                 )
                 if swap_players:
                     p0_score, p1_score, p0_time, p1_time = (
