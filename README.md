@@ -105,7 +105,7 @@ optional arguments:
 On an *M* x *M* chess board, 2 players are randomly distributed on the board with one player occupying one block.
 
 ### Game Moving
-In each iteration, one player moves at most `K` steps (between `0` and `K`) in either horizontal or vertical direction, and must put a barrier around him or her in one of the 4 directions except the boarders of the chess board. The players move in a round-robin way.
+In each turn, one player moves at most `K` steps (between `0` and `K`), where each step can be in either horizontal or vertical direction, and must put a barrier around him or her in one of the 4 directions except the boarders of the chess board. The players move in a round-robin way.
 
 #### Note: 
  - Each player cannot go into other player's place or put barriers in areas that already have barriers.
