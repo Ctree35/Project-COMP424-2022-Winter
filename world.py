@@ -10,6 +10,27 @@ from store import AGENT_REGISTRY
 from constants import *
 import sys
 
+import signal
+from contextlib import contextmanager
+
+
+class TimeoutException(Exception):
+    pass
+
+
+@contextmanager
+def time_limit(seconds):
+    def signal_handler(signum, frame):
+        raise TimeoutException("Execution timed out!")
+
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(seconds)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
+
+
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
@@ -145,6 +166,10 @@ class World:
         self.p0_time = 0
         self.p1_time = 0
 
+        # Player step count
+        self.p0_step = 0
+        self.p1_step = 0
+
         # Cache to store and use the data
         self.results_cache = ()
         # UI Engine
@@ -187,6 +212,28 @@ class World:
         else:
             self.p1_time += time_taken
 
+    def get_current_player_step(self):
+        """
+        Get the step count of the current player
+
+        Returns
+        -------
+        int
+        """
+        if not self.turn:
+            return self.p0_step
+        else:
+            return self.p1_step
+
+    def update_player_step(self):
+        """
+        Update the steps taken by the player
+        """
+        if not self.turn:
+            self.p0_step += 1
+        else:
+            self.p1_step += 1
+
     def step(self):
         """
         Take a step in the game world.
@@ -201,37 +248,50 @@ class World:
         cur_player, cur_pos, adv_pos = self.get_current_player()
 
         try:
-            # Run the agents step function
-            start_time = time()
-            next_pos, dir = cur_player.step(
-                deepcopy(self.chess_board),
-                tuple(cur_pos),
-                tuple(adv_pos),
-                self.max_step,
-            )
-            self.update_player_time(time() - start_time)
+            cur_player_step = self.get_current_player_step()
+            # Get allowed time in this step
+            if cur_player_step == 0:
+                allowed_time_seconds = 30
+            else:
+                allowed_time_seconds = 2
+            # Method to enforce time limit
+            with time_limit(allowed_time_seconds):
+                # Run the agents step function
+                self.update_player_step()
+                start_time = time()
+                next_pos, dir = cur_player.step(
+                    deepcopy(self.chess_board),
+                    tuple(cur_pos),
+                    tuple(adv_pos),
+                    self.max_step,
+                )
+                self.update_player_time(time() - start_time)
 
-            next_pos = np.asarray(next_pos, dtype=cur_pos.dtype)
-            if not self.check_boundary(next_pos):
-                raise ValueError("End position {} is out of boundary".format(next_pos))
-            if not 0 <= dir <= 3:
-                raise ValueError(
-                    "Barrier dir should reside in [0, 3], but your dir is {}".format(
-                        dir
+                next_pos = np.asarray(next_pos, dtype=cur_pos.dtype)
+                if not self.check_boundary(next_pos):
+                    raise ValueError(
+                        "End position {} is out of boundary".format(next_pos)
                     )
-                )
-            if not self.check_valid_step(cur_pos, next_pos, dir):
-                raise ValueError(
-                    "Not a valid step from {} to {} and put barrier at {}, with max steps = {}".format(
-                        cur_pos, next_pos, dir, self.max_step
+                if not 0 <= dir <= 3:
+                    raise ValueError(
+                        "Barrier dir should reside in [0, 3], but your dir is {}".format(
+                            dir
+                        )
                     )
-                )
+                if not self.check_valid_step(cur_pos, next_pos, dir):
+                    raise ValueError(
+                        "Not a valid step from {} to {} and put barrier at {}, with max steps = {}".format(
+                            cur_pos, next_pos, dir, self.max_step
+                        )
+                    )
         except BaseException as e:
             ex_type = type(e).__name__
             if (
                 "SystemExit" in ex_type and isinstance(cur_player, HumanAgent)
             ) or "KeyboardInterrupt" in ex_type:
                 sys.exit(0)
+            if "TimeoutException" in ex_type:
+                print("Step call took too long.")
             print(
                 "An exception raised. The traceback is as follows:\n{}".format(
                     traceback.format_exc()
